@@ -1,15 +1,11 @@
 package com.mehmet.FlightBookingSystem.model.entity;
-
-
-import jdk.jfr.DataAmount;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Data
@@ -20,10 +16,10 @@ public class Airport implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotNull(message = "{validation.messages.airport.name}")
+    @NotBlank(message = "{validation.messages.airport.name}")
     private String name;
 
-    @NotNull(message = "{validation.messages.airport.address}")
+    @NotBlank(message = "{validation.messages.airport.address}")
     private String address;
 
 }
