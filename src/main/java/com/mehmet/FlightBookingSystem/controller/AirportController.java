@@ -1,15 +1,18 @@
 package com.mehmet.FlightBookingSystem.controller;
-
-
+import com.mehmet.FlightBookingSystem.exception.NotFoundException;
 import com.mehmet.FlightBookingSystem.model.entity.Airport;
 import com.mehmet.FlightBookingSystem.service.AirportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
+import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+@Validated
 @RestController
 @RequestMapping("/api/airport")
 @RequiredArgsConstructor
@@ -22,26 +25,38 @@ public class AirportController {
         return "Welcome to Airport Service";
     }
 
+
     @GetMapping(path = "/getAllAirports")
-    public List<Airport> getAllAirports(){
-        return airportService.getAllAirports();
+    public ResponseEntity<?> getAllAirports() {
+        try {
+            List<Airport> airports = airportService.getAllAirports();
+            return new ResponseEntity<>(airports, HttpStatus.OK);
+        } catch (NotFoundException e) {
+            System.err.println(e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping(path = "/{airportID}")
-    public ResponseEntity<Airport> getAirport(@PathVariable Integer airportID){
-        Airport airport = airportService.getAirport(airportID);
-        if(airport != null){
+    public ResponseEntity<?> getAirport(@PathVariable Integer airportID) {
+        try {
+            Airport airport = airportService.getAirport(airportID);
             return new ResponseEntity<>(airport, HttpStatus.OK);
-        }
-        else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (NotFoundException e) {
+            System.err.println(e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
     @PostMapping(path = "/add_airport")
-    public ResponseEntity<Void> addAirport(@RequestBody Airport airport){
+    public ResponseEntity<Map<String, String>> addAirport(@Valid @RequestBody Airport airport) {
         airportService.addAirport(airport);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        System.out.println("Data is added - Airport Name: " + airport.getName());
+        // Json result is created
+        Map<String, String> response = new HashMap<>();
+        response.put("status", "success");
+        response.put("message", "Data is added - Airport Name: " + airport.getName());
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @PutMapping(path = "/{airportID}")
@@ -55,4 +70,5 @@ public class AirportController {
         airportService.deleteAirport(airportId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
 }
