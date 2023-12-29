@@ -6,11 +6,12 @@ import com.mehmet.FlightBookingSystem.service.AirportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class AirortServiceImpl implements AirportService {
+public class AirportServiceImpl implements AirportService {
 
     private final AirportRepository airportRepository;
 
@@ -58,6 +59,12 @@ public class AirortServiceImpl implements AirportService {
 
     @Override
     public void deleteAirport(Integer aiportID) {
-        airportRepository.delete(getAirport(aiportID));
+        Airport airportToDelete = getAirport(aiportID);
+        if(airportToDelete != null){
+            airportRepository.delete(airportToDelete);
+        }
+        else{
+            throw new EntityNotFoundException("Havalanı bulunamadı, ID:" + aiportID);
+        }
     }
 }

@@ -1,4 +1,5 @@
 package com.mehmet.FlightBookingSystem.controller;
+
 import com.mehmet.FlightBookingSystem.exception.NotFoundException;
 import com.mehmet.FlightBookingSystem.model.entity.Airport;
 import com.mehmet.FlightBookingSystem.service.AirportService;
@@ -7,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
@@ -21,7 +24,7 @@ public class AirportController {
     private final AirportService airportService;
 
     @GetMapping(path = "/welcome")
-    public String welcome(){
+    public String welcome() {
         return "Welcome to Airport Service";
     }
 
@@ -60,15 +63,20 @@ public class AirportController {
     }
 
     @PutMapping(path = "/{airportID}")
-    public ResponseEntity<Void> updateAirport(@PathVariable Integer airportID, @RequestBody Airport updatedAirport){
+    public ResponseEntity<Void> updateAirport(@PathVariable Integer airportID, @RequestBody Airport updatedAirport) {
         airportService.updateAirport(airportID, updatedAirport);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/{airportId}")
-    public ResponseEntity<Void> deleteAirport(@PathVariable Integer airportId){
-        airportService.deleteAirport(airportId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    public ResponseEntity<Void> deleteAirport(@PathVariable Integer airportId) {
+        try {
+            airportService.deleteAirport(airportId);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
-
 }
