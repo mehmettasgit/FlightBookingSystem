@@ -39,10 +39,14 @@ public class AirportCompanyServiceImpl implements AirportComapnyService {
 
     @Override
     public void addAirportCompany(AirportCompany airportCompany) {
-        if (airportCompany.getName() != null ) {
-            // ID'nin null kontrolü yapılamaz, bu kontrolü kaldır
-            airportCompanyRepository.save(airportCompany);
-        } else {
+        //Eklenen hava alanı şirketin adını kontrol et.
+        if(airportCompany != null){
+            Optional<AirportCompany> existingCompany = airportCompanyRepository.findByName(airportCompany.getName());
+            if (existingCompany.isPresent()) {
+                throw new IllegalArgumentException("Airport company with the same name already exists");
+            }
+        }
+        else {
             throw new IllegalArgumentException("Invalid airport data");
         }
     }

@@ -39,6 +39,11 @@ public class RouteServiceImpl implements RouteService {
     }
 
     @Override
+    public Route updateRoute(Route route) {
+        return null;
+    }
+
+    @Override
     public boolean deleteRoute(Integer id) {
         routeRepository.delete(getRoute(id));
         return true;

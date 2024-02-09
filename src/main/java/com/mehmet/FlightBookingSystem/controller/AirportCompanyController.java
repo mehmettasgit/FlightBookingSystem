@@ -32,6 +32,9 @@ public class AirportCompanyController {
     public ResponseEntity<?> getAllAirportCompanies(){
         try {
             List<AirportCompany> airportCompanies = airportComapnyService.getAllAirportCompanies();
+            for (AirportCompany company : airportCompanies) {
+                System.out.println(company); // Her bir şirketin bilgilerini konsola yazdır
+            }
             return new ResponseEntity<>(airportCompanies, HttpStatus.OK);
         } catch (NotFoundException e) {
             System.err.println(e.getMessage());
@@ -43,6 +46,7 @@ public class AirportCompanyController {
     public ResponseEntity<?> getAirportCompany(@PathVariable @Min(1) Integer airportCompanyId){
         try {
             AirportCompany airportCompany = airportComapnyService.getAirportCompany(airportCompanyId);
+                System.out.println(airportCompany);
             return new ResponseEntity<>(airportCompany, HttpStatus.OK);
         } catch (NotFoundException e) {
             System.err.println(e.getMessage());
@@ -54,13 +58,13 @@ public class AirportCompanyController {
     public ResponseEntity<Map<String,String >> saveAirportCompany(@RequestBody AirportCompany airportCompany){
         airportComapnyService.addAirportCompany(airportCompany);
         System.out.println("Data is added - AirportCompany Name:" +airportCompany.getName());
-
         //Json result is created
         Map<String, String> response = new HashMap<>();
         response.put("status", "success");
         response.put("message", "Data is added - Airport Name: " + airportCompany.getName());
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
+
     @PutMapping(path = "/{airportCompanyID}")
     public ResponseEntity<Void> updateAirportCompany(@PathVariable Integer airportCompanyID, @RequestBody AirportCompany airportCompany){
         airportComapnyService.updateAirportCompany(airportCompanyID, airportCompany);

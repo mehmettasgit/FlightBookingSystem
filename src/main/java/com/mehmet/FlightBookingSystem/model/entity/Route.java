@@ -5,6 +5,7 @@ import java.io.Serializable;
 
 
 @Table(name = "route")
+@Entity
 public class Route implements Serializable {
 
     @Id
