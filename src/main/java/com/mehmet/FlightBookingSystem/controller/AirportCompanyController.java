@@ -66,8 +66,9 @@ public class AirportCompanyController {
     }
 
     @PutMapping(path = "/{airportCompanyID}")
-    public ResponseEntity<Void> updateAirportCompany(@PathVariable Integer airportCompanyID, @RequestBody AirportCompany airportCompany){
+    public ResponseEntity<AirportCompany> updateAirportCompany(@PathVariable Integer airportCompanyID, @RequestBody AirportCompany airportCompany){
         airportComapnyService.updateAirportCompany(airportCompanyID, airportCompany);
+        AirportCompany updatedCompany = airportComapnyService.getAirportCompany(airportCompanyID); // Güncellenmiş şirket bilgisini al
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

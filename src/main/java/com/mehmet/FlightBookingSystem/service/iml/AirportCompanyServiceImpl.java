@@ -53,9 +53,12 @@ public class AirportCompanyServiceImpl implements AirportComapnyService {
 
     @Override
     public void updateAirportCompany(Integer airportCompanyId, AirportCompany updatedAirportCompany) {
-        getAirportCompany(airportCompanyId);
-        updatedAirportCompany.setId(airportCompanyId);
-        airportCompanyRepository.save(updatedAirportCompany);
+     AirportCompany existingAirportCompany = getAirportCompany(airportCompanyId);
+     String oldName = existingAirportCompany.getName();
+     String newName = updatedAirportCompany.getName();
+     existingAirportCompany.setId(airportCompanyId);
+     airportCompanyRepository.save(updatedAirportCompany);
+     System.out.println("AirportCompany with ID " + airportCompanyId + " UPDATED. Old name: " + oldName + ", New name: " + newName);
     }
 
     @Override
