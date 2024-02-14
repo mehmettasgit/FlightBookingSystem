@@ -75,11 +75,9 @@ public class AirportCompanyController {
     public ResponseEntity<Void> deleteAirport(@PathVariable Integer airportCompanyId) {
         try {
             airportComapnyService.deleteAirportCompany(airportCompanyId);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (EntityNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>( HttpStatus.NOT_FOUND);
         }
     }
 }

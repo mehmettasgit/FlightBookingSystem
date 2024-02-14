@@ -63,6 +63,8 @@ public class AirportCompanyServiceImpl implements AirportComapnyService {
         AirportCompany airportToDelete = getAirportCompany(airportCompanyId);
         if(airportToDelete != null){
             airportCompanyRepository.delete(airportToDelete);
+
+            System.out.println("ID" +airportCompanyId + "silindi.");
         }
         else{
             throw new EntityNotFoundException("Havalanı bulunamadı, ID:" + airportCompanyId);
