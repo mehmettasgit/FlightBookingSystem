@@ -1,6 +1,7 @@
 package com.mehmet.FlightBookingSystem.service.iml;
 
 import com.mehmet.FlightBookingSystem.exception.NotFoundException;
+import com.mehmet.FlightBookingSystem.model.entity.AirportCompany;
 import com.mehmet.FlightBookingSystem.model.entity.Passenger;
 import com.mehmet.FlightBookingSystem.model.mapper.repository.PassengerRepository;
 import com.mehmet.FlightBookingSystem.service.PassengerService;
@@ -21,13 +22,20 @@ public class PassengerServiceImpl implements PassengerService {
 
     @Override
     public List<Passenger> getAllPassengers() {
-        return passengerRepository.findAll();
+        List<Passenger> allPassengers = passengerRepository.findAll();
+        if(allPassengers.isEmpty()){
+            throw new NotFoundException("There is no Passenger in Database");
+        }
+        return allPassengers;
     }
 
     @Override
     public Passenger getPassenger(Integer id) {
-        Optional<Passenger> byId = passengerRepository.findById(id);
-        return byId.orElseThrow(()-> new NotFoundException("Passenger"));
+      Passenger passenger = passengerRepository.findById(id).orElse(null);
+      if(id == null){
+          throw new NotFoundException(id +"Id is not in the database");
+      }
+      return passenger;
     }
 
     @Override

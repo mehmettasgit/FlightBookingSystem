@@ -44,8 +44,14 @@ public class AirportServiceImpl implements AirportService {
             if (airport.getId() != null) {
                 throw new IllegalArgumentException("ID must be null for a new airport");
             }
+            // Aynı isimde bir havaalanı var mı kontrol et
+            List<Airport> existingAirports = airportRepository.findByName(airport.getName());
+            if(!existingAirports.isEmpty()){
+                throw new IllegalArgumentException("An airport with the same name already exists");
+            }
             airportRepository.save(airport);
-        } else {
+        }
+        else {
             throw new IllegalArgumentException("Invalid airport data");
         }
     }

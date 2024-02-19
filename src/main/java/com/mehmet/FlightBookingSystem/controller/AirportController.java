@@ -53,13 +53,22 @@ public class AirportController {
 
     @PostMapping(path = "/add_airport")
     public ResponseEntity<Map<String, String>> addAirport(@Valid @RequestBody Airport airport) {
-        airportService.addAirport(airport);
-        System.out.println("Data is added - Airport Name: " + airport.getName());
-        // Json result is created
-        Map<String, String> response = new HashMap<>();
-        response.put("status", "success");
-        response.put("message", "Data is added - Airport Name: " + airport.getName());
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+       try {
+           airportService.addAirport(airport);
+           System.out.println("Data is added - Airport Name: " + airport.getName());
+           // Json result is created
+           Map<String, String> response = new HashMap<>();
+           response.put("status", "success");
+           response.put("message", "Data is added - Airport Name: " + airport.getName());
+           return new ResponseEntity<>(response, HttpStatus.CREATED);
+       }
+       catch (IllegalArgumentException e){
+           // Hata durumunda uygun HTTP yanıtını ve hata mesajını döndür
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("status", "error");
+            errorResponse.put("message", e.getMessage());
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+       }
     }
 
     @PutMapping(path = "/{airportID}")

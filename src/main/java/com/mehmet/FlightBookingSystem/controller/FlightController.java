@@ -26,7 +26,7 @@ public class FlightController {
         return "Welcome to Flight Service";
     }
 
-    @GetMapping(value = "/all")
+    @GetMapping(value = "/allFlights")
     public List<Flight> getAllFlights(){
         return flightService.getAllFlights();
     }
