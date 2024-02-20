@@ -11,4 +11,8 @@ import java.util.Optional;
 public interface PassengerRepository extends JpaRepository<Passenger, Integer> {
     Optional <Passenger> findById(Integer id);
 
+    Optional <Passenger> findByEmail(String email);
+
+    Optional <Passenger> findByPhone(String phone);
+
 }

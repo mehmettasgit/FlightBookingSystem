@@ -12,9 +12,9 @@ public interface PassengerService {
 
     void addPassenger(Passenger passenger);
 
-    Passenger updatePassenger(final Integer id, final Passenger passenger);
+    void  updatePassenger(Integer id, Passenger passenger);
 
-    boolean deletePassenger(Integer id);
+    void deletePassenger(Integer id);
 
     List<Passenger> getPassengersNameStartsWith(String prefix);
 
