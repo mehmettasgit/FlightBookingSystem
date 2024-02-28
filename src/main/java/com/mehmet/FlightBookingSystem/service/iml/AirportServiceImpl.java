@@ -1,59 +1,50 @@
 package com.mehmet.FlightBookingSystem.service.iml;
+
 import com.mehmet.FlightBookingSystem.exception.NotFoundException;
+import com.mehmet.FlightBookingSystem.model.dto.AirportDTO;
 import com.mehmet.FlightBookingSystem.model.entity.Airport;
-import com.mehmet.FlightBookingSystem.model.mapper.repository.AirportRepository;
+import com.mehmet.FlightBookingSystem.model.mapper.AirportMapper;
+import com.mehmet.FlightBookingSystem.model.repository.AirportRepository;
 import com.mehmet.FlightBookingSystem.service.AirportService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class AirportServiceImpl implements AirportService {
 
-    private final AirportRepository airportRepository;
+    @Autowired
+    private AirportRepository airportRepository;
+
 
     @Override
-    public List<Airport> getAllAirports() {
+    public List<AirportDTO> getAllAirports() {
         List<Airport> airports = airportRepository.findAll();
         if (airports.isEmpty()) {
             throw new NotFoundException("There is no Airport in Database");
         }
-        return airports;
+        return airports.stream().map(AirportMapper::toDTO).collect(Collectors.toList());
     }
 
     @Override
-    public Airport getAirport(Integer airportID) {
-        Airport airport = airportRepository.findById(airportID).orElse(null);
-        if (airport == null) {
-            throw new NotFoundException(airportID + "Id is not in the Database");
-        }
-        return airport;
+    public AirportDTO getAirport(Integer airportID) {
+        Optional<Airport> optionalAirport = airportRepository.findById(airportID);
+        Airport airport = optionalAirport.orElseThrow(() -> new NotFoundException("Airport with ID " + airportID + " is not found"));
+        return AirportMapper.toDTO(airport);
     }
 
     @Override
     public void addAirport(Airport airport) {
-        //Airport airport1 = new Airport();
-        if (airport != null &&
-                airport.getName() != null && !airport.getName().isEmpty() &&
-                airport.getAddress() != null && !airport.getAddress().isEmpty()) {
-
-            // Eğer id alanı dolu ise hata fırlat
-            if (airport.getId() != null) {
-                throw new IllegalArgumentException("ID must be null for a new airport");
-            }
-            // Aynı isimde bir havaalanı var mı kontrol et
             List<Airport> existingAirports = airportRepository.findByName(airport.getName());
             if(!existingAirports.isEmpty()){
                 throw new IllegalArgumentException("An airport with the same name already exists");
             }
             airportRepository.save(airport);
-        }
-        else {
-            throw new IllegalArgumentException("Invalid airport data");
-        }
     }
 
     @Override
@@ -64,13 +55,12 @@ public class AirportServiceImpl implements AirportService {
     }
 
     @Override
-    public void deleteAirport(Integer aiportID) {
-        Airport airportToDelete = getAirport(aiportID);
-        if(airportToDelete != null){
-            airportRepository.delete(airportToDelete);
-        }
-        else{
-            throw new EntityNotFoundException("Havalanı bulunamadı, ID:" + aiportID);
+    public void deleteAirport(Integer airportID) {
+
+        if (airportRepository.existsById(airportID)) {
+            airportRepository.deleteById(airportID);
+        } else {
+            throw new EntityNotFoundException("Havaalanı bulunamadı, ID:" + airportID);
         }
     }
 }

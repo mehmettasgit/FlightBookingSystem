@@ -1,7 +1,9 @@
 package com.mehmet.FlightBookingSystem.controller;
 
 import com.mehmet.FlightBookingSystem.exception.NotFoundException;
+import com.mehmet.FlightBookingSystem.model.dto.AirportDTO;
 import com.mehmet.FlightBookingSystem.model.entity.Airport;
+import com.mehmet.FlightBookingSystem.model.mapper.AirportMapper;
 import com.mehmet.FlightBookingSystem.service.AirportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,18 +35,18 @@ public class AirportController {
     @GetMapping(path = "/getAllAirports")
     public ResponseEntity<?> getAllAirports() {
         try {
-            List<Airport> airports = airportService.getAllAirports();
+            List<AirportDTO> airports = airportService.getAllAirports();
             return new ResponseEntity<>(airports, HttpStatus.OK);
         } catch (NotFoundException e) {
             System.err.println(e.getMessage());
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.emptyList());
         }
     }
 
     @GetMapping(path = "/{airportID}")
     public ResponseEntity<?> getAirport(@PathVariable Integer airportID) {
         try {
-            Airport airport = airportService.getAirport(airportID);
+            AirportDTO airport = airportService.getAirport(airportID);
             return new ResponseEntity<>(airport, HttpStatus.OK);
         } catch (NotFoundException e) {
             System.err.println(e.getMessage());
@@ -52,9 +55,9 @@ public class AirportController {
     }
 
     @PostMapping(path = "/add_airport")
-    public ResponseEntity<Map<String, String>> addAirport(@Valid @RequestBody Airport airport) {
+    public ResponseEntity<Map<String, String>> addAirport(@Valid @RequestBody AirportDTO airport) {
        try {
-           airportService.addAirport(airport);
+           airportService.addAirport(AirportMapper.toEntity(airport));
            System.out.println("Data is added - Airport Name: " + airport.getName());
            // Json result is created
            Map<String, String> response = new HashMap<>();

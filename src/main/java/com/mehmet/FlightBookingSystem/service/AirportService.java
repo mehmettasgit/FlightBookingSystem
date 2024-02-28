@@ -1,14 +1,15 @@
 package com.mehmet.FlightBookingSystem.service;
 
+import com.mehmet.FlightBookingSystem.model.dto.AirportDTO;
 import com.mehmet.FlightBookingSystem.model.entity.Airport;
 
 import java.util.List;
 
 public interface AirportService {
 
-    List<Airport> getAllAirports();
+    List<AirportDTO> getAllAirports();
 
-    Airport getAirport(Integer airportID);
+    AirportDTO getAirport(Integer airportID);
 
     void addAirport(Airport airport);
 

@@ -1,9 +1,8 @@
 package com.mehmet.FlightBookingSystem.service.iml;
 
 import com.mehmet.FlightBookingSystem.exception.NotFoundException;
-import com.mehmet.FlightBookingSystem.model.entity.Airport;
 import com.mehmet.FlightBookingSystem.model.entity.AirportCompany;
-import com.mehmet.FlightBookingSystem.model.mapper.repository.AirportCompanyRepository;
+import com.mehmet.FlightBookingSystem.model.repository.AirportCompanyRepository;
 import com.mehmet.FlightBookingSystem.service.AirportComapnyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
