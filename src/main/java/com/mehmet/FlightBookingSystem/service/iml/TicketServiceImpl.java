@@ -3,7 +3,7 @@ package com.mehmet.FlightBookingSystem.service.iml;
 import com.mehmet.FlightBookingSystem.exception.NotFoundException;
 import com.mehmet.FlightBookingSystem.model.entity.Flight;
 import com.mehmet.FlightBookingSystem.model.entity.Ticket;
-import com.mehmet.FlightBookingSystem.model.mapper.repository.TicketRepository;
+import com.mehmet.FlightBookingSystem.model.repository.TicketRepository;
 import com.mehmet.FlightBookingSystem.service.TicketService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

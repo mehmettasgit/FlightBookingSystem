@@ -1,9 +1,11 @@
 package com.mehmet.FlightBookingSystem.service.iml;
 import com.mehmet.FlightBookingSystem.exception.NotFoundException;
 import com.mehmet.FlightBookingSystem.model.entity.Passenger;
-import com.mehmet.FlightBookingSystem.model.mapper.repository.PassengerRepository;
+import com.mehmet.FlightBookingSystem.model.mapper.PassengerMapper;
+import com.mehmet.FlightBookingSystem.model.repository.PassengerRepository;
 import com.mehmet.FlightBookingSystem.service.PassengerService;
 import lombok.RequiredArgsConstructor;
+import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -18,6 +20,8 @@ public class PassengerServiceImpl implements PassengerService {
 
     private final PassengerRepository passengerRepository;
 
+    private static final PassengerMapper PASSENGER_MAPPER = Mappers.getMapper(PassengerMapper.class);
+
 
     @Override
     public List<Passenger> getAllPassengers() {
@@ -30,11 +34,8 @@ public class PassengerServiceImpl implements PassengerService {
 
     @Override
     public Passenger getPassenger(Integer id) {
-      Passenger passenger = passengerRepository.findById(id).orElse(null);
-      if(id == null){
-          throw new NotFoundException(id +"Id is not in the database");
-      }
-      return passenger;
+      Optional<Passenger> byID = passengerRepository.findById(id);
+      return byID.orElseThrow(()-> new NotFoundException("Passenger"));
     }
 
     @Override
@@ -45,7 +46,6 @@ public class PassengerServiceImpl implements PassengerService {
             if (existingPhoneNumber.isPresent()) {
                 throw new IllegalArgumentException("This phone number is already used");
             }
-
             if (existingEmail.isPresent()) {
                 throw new IllegalArgumentException("This e-mail is already used");
             }
@@ -56,26 +56,11 @@ public class PassengerServiceImpl implements PassengerService {
     }
 
     @Override
-    public void updatePassenger(Integer id, Passenger passenger) {
-        Passenger existingpassenger = getPassenger(id);
-        if(existingpassenger !=null) {
-            // Var olan yolcu bulunduğunda, güncelleme işlemlerini gerçekleştirin
-            existingpassenger.setFirstname(passenger.getFirstname());
-            existingpassenger.setLastname(passenger.getLastname());
-            existingpassenger.setGender(passenger.getGender());
-            existingpassenger.setAge(passenger.getAge());
-            existingpassenger.setPhone(passenger.getPhone());
-            existingpassenger.setEmail(passenger.getEmail());
-
-            // Veritabanında güncelleme yapın
-            passengerRepository.save(existingpassenger);
-            System.out.println("Passenger with ID " + id + " has been updated.");
-        }
-        else {
-            throw new NotFoundException("Passenger with ID " + id + " not found.");
-        }
+    public Passenger updatePassenger(final Integer id, final Passenger passenger) {
+       Passenger currPassenger = getPassenger(id);
+       PASSENGER_MAPPER.fill(passenger, currPassenger);
+       return passengerRepository.save(currPassenger);
     }
-
 
     @Override
     public void deletePassenger(Integer id) {
@@ -98,8 +83,9 @@ public class PassengerServiceImpl implements PassengerService {
 
     @Override
     public List<Passenger> getPassengersSortedViaLastNameAsUpperCase() {
-        return null;
+        List<Passenger> allPassengers = getAllPassengers();
+        return allPassengers.stream().sorted(Comparator.comparing(Passenger::getLastname))
+                .peek(p->p.setLastname(p.getLastname().toUpperCase()))
+                .collect(Collectors.toList());
     }
-
-
 }

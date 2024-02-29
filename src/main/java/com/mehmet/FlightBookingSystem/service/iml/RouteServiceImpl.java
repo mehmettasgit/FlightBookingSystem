@@ -1,13 +1,11 @@
 package com.mehmet.FlightBookingSystem.service.iml;
 
 import com.mehmet.FlightBookingSystem.exception.NotFoundException;
-import com.mehmet.FlightBookingSystem.model.entity.Airport;
 import com.mehmet.FlightBookingSystem.model.entity.Route;
-import com.mehmet.FlightBookingSystem.model.mapper.repository.RouteRepository;
+import com.mehmet.FlightBookingSystem.model.repository.RouteRepository;
 import com.mehmet.FlightBookingSystem.service.AirportService;
 import com.mehmet.FlightBookingSystem.service.RouteService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -21,6 +21,11 @@ public class RouteController {
 
     private final RouteService routeService;
 
+    @GetMapping
+    public String welcome(){
+        return "Welcome to AirportCompany service";
+    }
+
     @GetMapping(value = "/all")
     public List<Route> getAllRoutes(){
         return routeService.getAllRoutes();

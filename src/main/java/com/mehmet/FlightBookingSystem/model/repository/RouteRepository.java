@@ -1,4 +1,4 @@
-package com.mehmet.FlightBookingSystem.model.mapper.repository;
+package com.mehmet.FlightBookingSystem.model.repository;
 
 import com.mehmet.FlightBookingSystem.model.entity.Route;
 import org.springframework.data.jpa.repository.JpaRepository;

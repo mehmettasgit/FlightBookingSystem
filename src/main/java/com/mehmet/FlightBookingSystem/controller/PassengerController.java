@@ -1,19 +1,24 @@
 package com.mehmet.FlightBookingSystem.controller;
 import com.mehmet.FlightBookingSystem.exception.NotFoundException;
-import com.mehmet.FlightBookingSystem.model.entity.AirportCompany;
+import com.mehmet.FlightBookingSystem.model.dto.PassengerDTO;
 import com.mehmet.FlightBookingSystem.model.entity.Passenger;
+import com.mehmet.FlightBookingSystem.model.mapper.PassengerMapper;
 import com.mehmet.FlightBookingSystem.service.PassengerService;
 import lombok.RequiredArgsConstructor;
+import org.mapstruct.factory.Mappers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
+import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 
 @Validated
 @RestController
@@ -22,6 +27,8 @@ import java.util.Map;
 public class PassengerController {
 
     private final PassengerService passengerService;
+
+    private static final PassengerMapper PASSENGER_MAPPER = Mappers.getMapper(PassengerMapper.class);
 
     @GetMapping
     public String welcome(){
@@ -32,7 +39,10 @@ public class PassengerController {
     public ResponseEntity<?> getAllPassengers(){
         try{
             List<Passenger> allPassengers = passengerService.getAllPassengers();
-            return new ResponseEntity<>(allPassengers, HttpStatus.OK);
+            List<PassengerDTO> allPassengerDTOs = allPassengers.stream()
+                    .map(PASSENGER_MAPPER::toDto)
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok(allPassengerDTOs);
         }
         catch(NotFoundException e){
             System.err.println(e.getMessage());
@@ -44,7 +54,8 @@ public class PassengerController {
     public ResponseEntity<?> getPassengerById(@PathVariable @Min(1) Integer id){
         try {
             Passenger passenger = passengerService.getPassenger(id);
-            return new ResponseEntity<>(passenger, HttpStatus.OK);
+            PassengerDTO passengerDTO = PASSENGER_MAPPER.toDto(passenger); // Yolcu nesnesini DTO'ya dönüştür
+            return new ResponseEntity<>(passengerDTO, HttpStatus.OK);
         }
         catch (NotFoundException e){
             System.err.println(e.getMessage());
@@ -53,18 +64,16 @@ public class PassengerController {
     }
 
     @PostMapping(value = "/addPassenger")
-    public ResponseEntity<Map<String,String>> savePassenger(@RequestBody Passenger passenger){
+    public ResponseEntity<?> savePassenger(@RequestBody Passenger passenger){
         passengerService.addPassenger(passenger);
-        System.out.println("Passenger is added:" + passenger.getFirstname() + " " + passenger.getLastname());
-        Map<String, String> response = new HashMap<>();
-        response.put("status", "success");
-        response.put("message", "Data is added- Passenger Name: " + passenger.getFirstname() + " " + passenger.getLastname());
+        PassengerDTO passengerDTO = PASSENGER_MAPPER.toDto(passenger); // Yolcu nesnesini DTO'ya dönüştür
 
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(passengerDTO, HttpStatus.OK);
     }
 
     @PutMapping(value = "/{passengerID}")
-    public ResponseEntity<Passenger> updatePassenger(@PathVariable Integer passengerID, @RequestBody Passenger passenger){
+    public ResponseEntity<Passenger> updatePassenger(@PathVariable final Integer passengerID,
+                                                     @Valid @RequestBody Passenger passenger){
         passengerService.updatePassenger(passengerID, passenger);
         Passenger updatedPassenger = passengerService.getPassenger(passengerID);
         return new ResponseEntity<>(HttpStatus.OK);

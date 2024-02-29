@@ -12,7 +12,7 @@ public interface PassengerService {
 
     void addPassenger(Passenger passenger);
 
-    void  updatePassenger(Integer id, Passenger passenger);
+    Passenger  updatePassenger(final Integer id, final Passenger passenger);
 
     void deletePassenger(Integer id);
 
