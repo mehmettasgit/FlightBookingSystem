@@ -16,5 +16,6 @@ public interface AirportComapnyService {
 
     void deleteAirportCompany(Integer airportCompanyId);
 
+    boolean addNewFlight(Integer airportCompanyId, Integer flightId);
 
 }

@@ -49,7 +49,9 @@ public class PassengerServiceImpl implements PassengerService {
             if (existingEmail.isPresent()) {
                 throw new IllegalArgumentException("This e-mail is already used");
             }
+            passengerRepository.save(passenger);
         }
+
         else {
             throw new IllegalArgumentException("Invalid passenger data");
         }

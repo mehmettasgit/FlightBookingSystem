@@ -4,6 +4,7 @@ package com.mehmet.FlightBookingSystem.controller;
 import com.mehmet.FlightBookingSystem.exception.NotFoundException;
 import com.mehmet.FlightBookingSystem.model.entity.Airport;
 import com.mehmet.FlightBookingSystem.model.entity.AirportCompany;
+import com.mehmet.FlightBookingSystem.model.entity.Flight;
 import com.mehmet.FlightBookingSystem.service.AirportComapnyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
 import javax.validation.constraints.Min;
 import java.util.HashMap;
 import java.util.List;
@@ -81,4 +83,15 @@ public class AirportCompanyController {
             return new ResponseEntity<>( HttpStatus.NOT_FOUND);
         }
     }
+
+   /* @PostMapping(value = "/add-flight")
+    public boolean addNewFlight(@RequestParam @Min(1) Integer airportCompanyId,
+                                @RequestParam @Min(1) Integer flightId){
+        return airportComapnyService.addNewFlight(airportCompanyId, flightId);
+
+    }*/
+   @PostMapping(value = "/add-flight")
+   public boolean addNewFlight(@RequestBody Flight flight){
+       return airportComapnyService.addNewFlight(flight.getAirportCompany().getId(), flight.getId());
+   }
 }

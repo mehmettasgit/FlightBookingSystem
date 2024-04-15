@@ -2,8 +2,10 @@ package com.mehmet.FlightBookingSystem.service.iml;
 
 import com.mehmet.FlightBookingSystem.exception.NotFoundException;
 import com.mehmet.FlightBookingSystem.model.entity.AirportCompany;
+import com.mehmet.FlightBookingSystem.model.entity.Flight;
 import com.mehmet.FlightBookingSystem.model.repository.AirportCompanyRepository;
 import com.mehmet.FlightBookingSystem.service.AirportComapnyService;
+import com.mehmet.FlightBookingSystem.service.FlightService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,8 @@ import java.util.Optional;
 public class AirportCompanyServiceImpl implements AirportComapnyService {
 
     private final AirportCompanyRepository airportCompanyRepository;
+
+    private final FlightService flightService;
 
 
     @Override
@@ -43,6 +47,9 @@ public class AirportCompanyServiceImpl implements AirportComapnyService {
             Optional<AirportCompany> existingCompany = airportCompanyRepository.findByName(airportCompany.getName());
             if (existingCompany.isPresent()) {
                 throw new IllegalArgumentException("Airport company with the same name already exists");
+            }else
+            {
+                airportCompanyRepository.save(airportCompany);
             }
         }
         else {
@@ -52,12 +59,17 @@ public class AirportCompanyServiceImpl implements AirportComapnyService {
 
     @Override
     public void updateAirportCompany(Integer airportCompanyId, AirportCompany updatedAirportCompany) {
-     AirportCompany existingAirportCompany = getAirportCompany(airportCompanyId);
-     String oldName = existingAirportCompany.getName();
-     String newName = updatedAirportCompany.getName();
-     existingAirportCompany.setId(airportCompanyId);
-     airportCompanyRepository.save(updatedAirportCompany);
-     System.out.println("AirportCompany with ID " + airportCompanyId + " UPDATED. Old name: " + oldName + ", New name: " + newName);
+        // Mevcut havaalanı şirketini al
+        AirportCompany existingAirportCompany = getAirportCompany(airportCompanyId);
+
+        // Yeni veriyle mevcut havaalanı şirketini güncelle
+        existingAirportCompany.setName(updatedAirportCompany.getName());
+        // Diğer alanları da güncelleyebilirsiniz
+
+        // Güncellenmiş havaalanı şirketini kaydet
+        airportCompanyRepository.save(existingAirportCompany);
+
+        System.out.println("AirportCompany with ID " + airportCompanyId + " UPDATED. New name: " + existingAirportCompany.getName());
     }
 
     @Override
@@ -71,5 +83,15 @@ public class AirportCompanyServiceImpl implements AirportComapnyService {
         else{
             throw new EntityNotFoundException("Havalanı bulunamadı, ID:" + airportCompanyId);
         }
+    }
+
+    @Override
+    public boolean addNewFlight(Integer airportCompanyId,Integer flightId ){
+        AirportCompany airportCompany = getAirportCompany(airportCompanyId);
+        Flight flight = new Flight();
+        flight.setId(flightId); // Flight'ın id'sini belirt
+        flight.setAirportCompany(airportCompany);
+        flightService.addFlight(flight);
+        return true;
     }
 }

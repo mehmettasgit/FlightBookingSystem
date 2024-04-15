@@ -37,9 +37,8 @@ public class Flight {
     private Date estimatedArrivalDate;
 
     @NotNull(message = "airport can not be null")
-    @ManyToOne(cascade = CascadeType.MERGE)
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinColumn(name = "airport_company_id", referencedColumnName = "id")
     private AirportCompany airportCompany;
-
 
 }
