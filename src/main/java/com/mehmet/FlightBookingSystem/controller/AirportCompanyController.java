@@ -25,6 +25,7 @@ public class AirportCompanyController {
 
     private final AirportComapnyService airportComapnyService;
 
+
     @GetMapping
     public String welcome(){
         return "Welcome to Airportcompany service";
@@ -84,12 +85,6 @@ public class AirportCompanyController {
         }
     }
 
-   /* @PostMapping(value = "/add-flight")
-    public boolean addNewFlight(@RequestParam @Min(1) Integer airportCompanyId,
-                                @RequestParam @Min(1) Integer flightId){
-        return airportComapnyService.addNewFlight(airportCompanyId, flightId);
-
-    }*/
    @PostMapping(value = "/add-flight")
    public boolean addNewFlight(@RequestBody Flight flight){
        return airportComapnyService.addNewFlight(flight.getAirportCompany().getId(), flight.getId());

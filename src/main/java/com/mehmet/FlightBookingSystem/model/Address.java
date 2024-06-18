@@ -12,10 +12,8 @@ public class Address implements Serializable {
     @NotBlank
     private String city;
 
-    @NotBlank
     private String province;
-
-    private String streetCode;
+    private String  streetCode;
     private Integer buildingNo;
 
     public Address(String city, String province) {
