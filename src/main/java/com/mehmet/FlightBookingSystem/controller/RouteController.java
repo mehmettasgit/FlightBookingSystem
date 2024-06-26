@@ -1,6 +1,5 @@
 package com.mehmet.FlightBookingSystem.controller;
 
-
 import com.mehmet.FlightBookingSystem.model.entity.Route;
 import com.mehmet.FlightBookingSystem.service.RouteService;
 import lombok.RequiredArgsConstructor;
@@ -23,12 +22,18 @@ public class RouteController {
 
     @GetMapping
     public String welcome(){
-        return "Welcome to AirportCompany service";
+        return "Welcome to Route service";
     }
 
-    @GetMapping(value = "/all")
+  /*  @GetMapping(value = "/all")
     public List<Route> getAllRoutes(){
         return routeService.getAllRoutes();
+    }*/
+
+    @GetMapping(value = "/all")
+    public ResponseEntity<?> getAllRoutes(){
+        List<Route> routes = routeService.getAllRoutes();
+        return new ResponseEntity<>(routes, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}")
@@ -41,14 +46,17 @@ public class RouteController {
         routeService.addRoute(route);
     }
 
-    @PutMapping(value = "/update")
-    public Route updateRoute(@Valid @RequestBody Route route){
-        return routeService.updateRoute(route);
+    @PutMapping(value = "/updateroute/{routeID}")
+    public ResponseEntity<Void> updateRoute(@PathVariable Integer routeID,
+                                              @RequestBody @Valid Route updatedRoute)
+    {
+        routeService.updateRoute(routeID, updatedRoute);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping(value = "/delete")
-   public boolean deleteRoute(@RequestParam @Min(1) Integer id){
-        return routeService.deleteRoute(id);
+    @DeleteMapping(value = "/delete/{routeid}")
+   public boolean deleteRoute(@PathVariable Integer routeid){
+        return routeService.deleteRoute(routeid);
    }
 
    public ResponseEntity<Route> getOneByDepartureIdV2(@PathVariable @Min(1) Integer depId){

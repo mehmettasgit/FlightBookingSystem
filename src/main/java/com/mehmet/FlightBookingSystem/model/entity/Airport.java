@@ -2,6 +2,7 @@ package com.mehmet.FlightBookingSystem.model.entity;
 
 import com.mehmet.FlightBookingSystem.model.Address;
 import lombok.AllArgsConstructor;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -18,6 +19,7 @@ import java.util.List;
 @Entity
 @Table(name = "airport")
 public class Airport implements Serializable {
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

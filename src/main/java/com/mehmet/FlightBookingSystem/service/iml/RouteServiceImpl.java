@@ -37,8 +37,10 @@ public class RouteServiceImpl implements RouteService {
     }
 
     @Override
-    public Route updateRoute(Route route) {
-        return null;
+    public void  updateRoute(Integer routeid, Route route) {
+       getRoute(routeid);
+       route.setId(routeid);
+       routeRepository.save(route);
     }
 
     @Override
@@ -51,6 +53,4 @@ public class RouteServiceImpl implements RouteService {
     public Route getFirstRouteByDepartureAirportByDefault(Integer departureAirportId) {
         return null;
     }
-
-
 }

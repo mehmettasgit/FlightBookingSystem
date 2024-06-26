@@ -12,7 +12,7 @@ public interface RouteService {
 
     void addRoute(Route route);
 
-    Route updateRoute(Route route);
+    void updateRoute(Integer id, Route route);
 
     boolean deleteRoute(Integer id);
 
