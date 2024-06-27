@@ -63,6 +63,5 @@ public class RouteController {
         Route route = routeService.getFirstRouteByDepartureAirportByDefault(depId);
         return new ResponseEntity<>(route, HttpStatus.OK);
 
-
     }
 }
