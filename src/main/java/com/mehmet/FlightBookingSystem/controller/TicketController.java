@@ -25,7 +25,7 @@ public class TicketController {
 
     private final FlightService flightService;
 
-    @GetMapping
+    @GetMapping(value = "/welcome")
     public String welcome(){
         return "Welcome to Ticket Service!";
     }
@@ -57,5 +57,4 @@ public class TicketController {
 
 
     }
-
 }
