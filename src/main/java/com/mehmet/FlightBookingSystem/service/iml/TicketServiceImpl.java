@@ -50,6 +50,6 @@ public class  TicketServiceImpl implements TicketService {
 
     @Override
     public Page<Ticket> getRelatedFlightTickets(Pageable pageable, Flight flight) {
-        return null;
+        return ticketRepository.findByFlight(pageable, flight);
     }
 }

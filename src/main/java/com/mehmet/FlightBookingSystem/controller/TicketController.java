@@ -8,6 +8,7 @@ import com.mehmet.FlightBookingSystem.service.TicketService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,16 +46,20 @@ public class TicketController {
         ticketService.addTicket(ticket);
     }
 
-    @DeleteMapping(value = "/delete")
-    public Ticket updateTicket(@Valid @RequestBody Ticket ticket){
-        return ticketService.updateTicket(ticket);
+    @DeleteMapping(value = "/delete/{id}")
+    public ResponseEntity<?> deleteTicket(@PathVariable Integer id) {
+        boolean isDeleted = ticketService.deleteTicket(id);
+        if (isDeleted) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
+    @GetMapping(value = "/all/flight/{id}")
     public List<Ticket> getFlightRelatedTickets(@PathVariable @Min(1) Integer id){
         Flight flight = flightService.getFlight(id);
         Page<Ticket> relatedFlightTickets = ticketService.getRelatedFlightTickets(Pageable.unpaged(), flight);
         return relatedFlightTickets.getContent();
-
-
     }
 }

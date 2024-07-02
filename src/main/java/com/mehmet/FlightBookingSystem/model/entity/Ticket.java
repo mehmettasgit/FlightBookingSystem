@@ -33,6 +33,4 @@ public class Ticket implements Serializable {
     @JoinColumn(name = "flight_id")
     private Flight flight;
 
-    
-
 }
