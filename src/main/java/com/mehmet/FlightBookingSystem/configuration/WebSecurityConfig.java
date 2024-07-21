@@ -25,7 +25,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/**").permitAll()
                 //.antMatchers("/users/signin").permitAll()
                 //.antMatchers("/users/signup").permitAll()
-                //.antMatchers("/api/airport/welcome").permitAll() // Bu satırı ekleyin
+                //.antMatchers("/api/airport/welcome").permitAll()
                 //.antMatchers("/api/flight/**").hasRole("ADMIN")
                 // Disallow everything else..
                 .anyRequest().authenticated();
