@@ -30,7 +30,7 @@ public class PassengerController {
 
     private static final PassengerMapper PASSENGER_MAPPER = Mappers.getMapper(PassengerMapper.class);
 
-    @GetMapping
+    @GetMapping(value ="/welcome")
     public String welcome(){
         return "Welcome to Passenger Service!";
     }
@@ -87,6 +87,29 @@ public class PassengerController {
         }
         catch(EntityNotFoundException e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping(value = "/searchByFirstName")
+    public ResponseEntity<?> getPassengersByFirstNamePrefix(@RequestParam String prefix){
+        try{
+            List<Passenger> passengers = passengerService.getPassengersNameStartsWith(prefix);
+
+            // Log the passengers before mapping to DTO
+            System.out.println("Passengers: " + passengers);
+
+            List<PassengerDTO> passengerDTOS = passengers.stream()
+                    .map(PASSENGER_MAPPER::toDto)
+                    .collect(Collectors.toList());
+
+            // Log the DTOs
+            System.out.println("PassengerDTOs: " + passengerDTOS);
+
+            return new ResponseEntity<>(passengerDTOS, HttpStatus.OK);
+        }
+        catch(NotFoundException e){
+            System.err.println(e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 

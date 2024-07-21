@@ -8,6 +8,5 @@ import java.util.List;
 
 @Repository
 public interface AirportRepository extends JpaRepository<Airport, Integer> {
-
     List<Airport> findByName(String name);
 }

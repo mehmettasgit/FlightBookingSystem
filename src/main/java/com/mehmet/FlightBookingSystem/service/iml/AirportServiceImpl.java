@@ -1,6 +1,7 @@
 package com.mehmet.FlightBookingSystem.service.iml;
 
 import com.mehmet.FlightBookingSystem.exception.NotFoundException;
+import com.mehmet.FlightBookingSystem.model.Address;
 import com.mehmet.FlightBookingSystem.model.dto.AirportDTO;
 import com.mehmet.FlightBookingSystem.model.entity.Airport;
 import com.mehmet.FlightBookingSystem.model.mapper.AirportMapper;
@@ -38,6 +39,7 @@ public class AirportServiceImpl implements AirportService {
         return AirportMapper.toDTO(airport);
     }
 
+
     @Override
     public void addAirport(Airport airport) {
             List<Airport> existingAirports = airportRepository.findByName(airport.getName());
@@ -47,9 +49,9 @@ public class AirportServiceImpl implements AirportService {
             airportRepository.save(airport);
     }
 
-    @Override
+   @Override
     public void updateAirport(Integer airportId, Airport updatedAirport) {
-        getAirport(airportId);
+       getAirport(airportId);
         updatedAirport.setId(airportId);
         airportRepository.save(updatedAirport);
     }
@@ -63,4 +65,11 @@ public class AirportServiceImpl implements AirportService {
             throw new EntityNotFoundException("Havaalanı bulunamadı, ID:" + airportID);
         }
     }
+
+    /*private List<Address> getAddressCityStartsWith(String prefix){
+        List<Airport> allAirports = getAllAirports();
+        return allAirports.stream()
+                .map(Airport::getAddress)
+                .flatMap(Collection::stream);
+    }*/
 }

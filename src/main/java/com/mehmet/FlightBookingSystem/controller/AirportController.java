@@ -88,7 +88,7 @@ public class AirportController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping("/delete_airport/{airportId}")
+    @DeleteMapping("/delete_airport/{airportID}")
     public ResponseEntity<Void> deleteAirport(@PathVariable Integer airportId) {
         try {
             airportService.deleteAirport(airportId);

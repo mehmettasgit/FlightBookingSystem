@@ -78,9 +78,11 @@ public class PassengerServiceImpl implements PassengerService {
 
     @Override
     public List<Passenger> getPassengersNameStartsWith(String prefix) {
-        List<Passenger> allPassengers = getAllPassengers();
-        return allPassengers.stream().filter(p->p.getFirstname().startsWith(prefix))
-                .collect(Collectors.toList());
+        List<Passenger> passengers = passengerRepository.findByFirstnameStartingWith(prefix);
+        if (passengers.isEmpty()) {
+            throw new NotFoundException("No passengers found with the given prefix");
+        }
+        return passengers;
     }
 
     @Override
@@ -91,3 +93,5 @@ public class PassengerServiceImpl implements PassengerService {
                 .collect(Collectors.toList());
     }
 }
+
+

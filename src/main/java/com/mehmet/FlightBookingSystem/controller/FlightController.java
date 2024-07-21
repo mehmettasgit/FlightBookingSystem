@@ -21,7 +21,7 @@ public class FlightController {
 
     private final FlightService flightService;
 
-    @GetMapping
+    @GetMapping(value = "/welcome")
     public String welcome(){
         return "Welcome to Flight Service";
     }
@@ -31,7 +31,7 @@ public class FlightController {
         return flightService.getAllFlights();
     }
 
-    @GetMapping(value = "/{id}")
+    @GetMapping(value = "getFlightbyID/{id}")
     public Flight getFlight(@PathVariable @Min(1) Integer id){
         return flightService.getFlight(id);
     }
